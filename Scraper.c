@@ -134,6 +134,8 @@ WriteBufferToFile (
     Status = EFI_DEVICE_ERROR;
   }
 
+  File->Flush(File);
+
   //
   // Close the file and root directory
   //
@@ -295,7 +297,7 @@ UefiMain (
   gb_mul_four /= (1024 * 1024);
   UINT32 mb = LargestSize / (1024 * 1024);
   if (mb % ( 4 * 1024 )) gb_mul_four++;
-  UINT32 pos = 0;
+  UINT64 pos = 0;
   UINT32 num = 0;
   UINT32 switch_l = LargestSize / gb_mul_four;
   CHAR8 fname[5];
@@ -317,17 +319,17 @@ UefiMain (
         fname16[i] = (CHAR16) fname[i];
       }
     }
-    if ( r_size >= 4096 ) {
-      w_size = 4096;
+    if ( r_size >= 262144 ) {
+      w_size = 262144;
       r_size -= w_size;
       pos += w_size;
     } else {
-      w_size = LargestSize;
+      w_size = r_size;
       r_size -= w_size;
       pos += w_size;
     }
     CopyMem (buffer, (VOID*)MemoryPtr, w_size);
-    Print (L"  %x%% through memory dump...\r", 100 * pos / LargestSize);
+    Print (L"%3ld%% through memory dump...\r", (100 * pos) / LargestSize );
     WriteBufferToFile (ImageHandle, fname16, buffer, w_size);
   }
 
