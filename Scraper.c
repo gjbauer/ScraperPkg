@@ -1,5 +1,5 @@
 /** @file
-  UEFI application to find the largest continuous block of conventional memory.
+  UEFI application to scrape contents of RAM.
 
   Copyright (c) 2025, Gabriel Bauer. All rights reserved.<BR>
   MIT License
