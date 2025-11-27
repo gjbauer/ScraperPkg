@@ -291,7 +291,7 @@ UefiMain (
 
   UINT32 r_size = LargestSize;
   UINT32 w_size = 0;
-  UINT8 buffer[4096];
+  UINT8 buffer[262144];
   volatile UINT32 *MemoryPtr = (volatile UINT32 *) (UINTN) LargestBase;
   UINT32 gb_mul_four = LargestSize / ( 4 * 1024 );
   gb_mul_four /= (1024 * 1024);
