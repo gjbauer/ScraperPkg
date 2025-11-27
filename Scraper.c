@@ -292,6 +292,7 @@ UefiMain (
   UINT32 switch_l = LargestSize / gb_mul_four;
   char fname[5];
   char fnum;
+  CHAR16 fname16[5];
   
   SetMem ((VOID *)fname, 5, 0);
   while ( r_size > 0 )
@@ -303,6 +304,10 @@ UefiMain (
       SetMem ((VOID *)fname, 5, 0);
       AsciiStrCatS(fname, 1, &fnum );
       AsciiStrCatS(fname, 4, ".bin");
+      for (int i=0; i<5; i++)
+      {
+        fname16[i] = (CHAR16) fname[i];
+      }
     }
     if ( r_size >= 4096 ) {
       w_size = 4096;
@@ -315,7 +320,7 @@ UefiMain (
     }
     CopyMem (buffer, (VOID*)MemoryPtr, w_size);
     Print (L"  %d\% through memory dump...\r");
-    WriteBufferToFile (ImageHandle, (CHAR16 *)fname, buffer, w_size);
+    WriteBufferToFile (ImageHandle, fname16, buffer, w_size);
   }
 
   Print(L"\n");
