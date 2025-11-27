@@ -114,6 +114,14 @@ WriteBufferToFile (
     return Status;
   }
 
+  // Seek to the end of the file
+  // (UINT64)-1 is the command to set position to the end of the file
+  Status = File->SetPosition(File, (UINT64)-1);
+  if (EFI_ERROR(Status)) {
+      File->Close(File);
+      return Status;
+  }
+
   //
   // Write the buffer to the file
   //
@@ -124,8 +132,6 @@ WriteBufferToFile (
   } else if (WriteSize != BufferSize) {
     Print (L"Warning: Only wrote %ld of %ld bytes\n", WriteSize, BufferSize);
     Status = EFI_DEVICE_ERROR;
-  } else {
-    Print (L"Successfully wrote %ld bytes to file '%s'\n", WriteSize, FileName);
   }
 
   //
@@ -285,22 +291,24 @@ UefiMain (
   UINT32 w_size = 0;
   UINT8 buffer[4096];
   volatile UINT32 *MemoryPtr = (volatile UINT32 *) (UINTN) LargestBase;
-  UINT32 gb_mul_four = LargestSize / (UINT32)( 4 * 1024 );
+  UINT32 gb_mul_four = LargestSize / ( 4 * 1024 );
   gb_mul_four /= (1024 * 1024);
+  UINT32 mb = LargestSize / (1024 * 1024);
+  if (mb % ( 4 * 1024 )) gb_mul_four++;
   UINT32 pos = 0;
   UINT32 num = 0;
   UINT32 switch_l = LargestSize / gb_mul_four;
-  char fname[5];
-  char fnum;
+  CHAR8 fname[5];
+  CHAR8 fnum;
   CHAR16 fname16[5];
   
   SetMem ((VOID *)fname, 5, 0);
   while ( r_size > 0 )
   {
     SetMem ((VOID *)buffer, 4096, 0);
-    if (pos % switch_l ) {
+    if ( !(pos % switch_l) && pos > 0 ) {
       num++;
-      fnum = (char) ('0' + num);
+      fnum = (CHAR8) ('0' + num);
       SetMem ((VOID *)fname, 5, 0);
       AsciiStrCatS(fname, 1, &fnum );
       AsciiStrCatS(fname, 4, ".bin");
@@ -319,7 +327,7 @@ UefiMain (
       pos += w_size;
     }
     CopyMem (buffer, (VOID*)MemoryPtr, w_size);
-    Print (L"  %d\% through memory dump...\r");
+    Print (L"  %x%% through memory dump...\r", 100 * pos / LargestSize);
     WriteBufferToFile (ImageHandle, fname16, buffer, w_size);
   }
 
