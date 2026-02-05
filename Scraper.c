@@ -263,7 +263,7 @@ UefiMain (
   UINT64                LargestSize;
   CHAR16                SizeString[100];
 
-  Print (L"UEFI Memory Scraper\n");
+  Print (L"\nUEFI Memory Scraper\n");
   Print (L"================================\n\n");
 
   //
