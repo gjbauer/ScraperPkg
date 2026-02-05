@@ -35,4 +35,4 @@
   ScraperPkg/ScraperPkg.inf                                                                                                        
                                                                                                                                                                 
 [BuildOptions]                                                                                                                                                  
-  GCC:*_*_*_CC_FLAGS = -DDISABLE_NEW_DEPRECATED_INTERFACES
+  GCC:*_*_*_CC_FLAGS = -DDISABLE_NEW_DEPRECATED_INTERFACES -mcmodel=medany -mno-relax
