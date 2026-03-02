@@ -13,28 +13,28 @@
 #include <Library/PrintLib.h>
 #include <Protocol/SimpleFileSystem.h>
 #include <Protocol/LoadedImage.h>
-#include <Library/BaseMemoryLib.h> 
+#include <Library/BaseMemoryLib.h>
 #include <Library/BaseLib.h>
 
-VOID                                                                                                                                                                                                                                        
-FormatSize (                                                                                                                                                                                                                                
-  IN  UINT64  SizeInBytes,                                                                                                                                                                                                                  
-  OUT CHAR16  *Buffer,                                                                                                                                                                                                                      
-  IN  UINTN   BufferSize                                                                                                                                                                                                                    
-  )                                                                                                                                                                                                                                         
-{                                                                                                                                                                                                                                           
-  if (SizeInBytes >= (1ULL << 30)) {                                                                                                                                                                                                        
-    UnicodeSPrint (Buffer, BufferSize, L"%ld GB (%ld bytes)",                                                                                                                                                                               
-                   SizeInBytes >> 30, SizeInBytes);                                                                                                                                                                                         
-  } else if (SizeInBytes >= (1ULL << 20)) {                                                                                                                                                                                                 
-    UnicodeSPrint (Buffer, BufferSize, L"%ld MB (%ld bytes)",                                                                                                                                                                               
-                   SizeInBytes >> 20, SizeInBytes);                                                                                                                                                                                         
-  } else if (SizeInBytes >= (1ULL << 10)) {                                                                                                                                                                                                 
-    UnicodeSPrint (Buffer, BufferSize, L"%ld KB (%ld bytes)",                                                                                                                                                                               
-                   SizeInBytes >> 10, SizeInBytes);                                                                                                                                                                                         
-  } else {                                                                                                                                                                                                                                  
-    UnicodeSPrint (Buffer, BufferSize, L"%ld bytes", SizeInBytes);                                                                                                                                                                          
-  }                                                                                                                                                                                                                                         
+VOID
+FormatSize (
+  IN  UINT64  SizeInBytes,
+  OUT CHAR16  *Buffer,
+  IN  UINTN   BufferSize
+  )
+{
+  if (SizeInBytes >= (1ULL << 30)) {
+    UnicodeSPrint (Buffer, BufferSize, L"%ld GB (%ld bytes)",
+                   SizeInBytes >> 30, SizeInBytes);
+  } else if (SizeInBytes >= (1ULL << 20)) {
+    UnicodeSPrint (Buffer, BufferSize, L"%ld MB (%ld bytes)",
+                   SizeInBytes >> 20, SizeInBytes);
+  } else if (SizeInBytes >= (1ULL << 10)) {
+    UnicodeSPrint (Buffer, BufferSize, L"%ld KB (%ld bytes)",
+                   SizeInBytes >> 10, SizeInBytes);
+  } else {
+    UnicodeSPrint (Buffer, BufferSize, L"%ld bytes", SizeInBytes);
+  }
 }
 
 /**
@@ -171,11 +171,9 @@ FindLargestConventionalMemoryBlock (
   UINTN                     Index;
   UINT64                    CurrentSize;
   EFI_PHYSICAL_ADDRESS      CurrentBase;
-  BOOLEAN                   Found;
 
   *LargestBase = 0;
   *LargestSize = 0;
-  Found = FALSE;
 
   //
   // Get memory map size
@@ -228,7 +226,6 @@ FindLargestConventionalMemoryBlock (
       if (CurrentSize > *LargestSize) {
         *LargestBase = CurrentBase;
         *LargestSize = CurrentSize;
-        Found = TRUE;
       }
     }
 
@@ -303,7 +300,7 @@ UefiMain (
   CHAR8 fname[5];
   CHAR8 fnum;
   CHAR16 fname16[5];
-  
+
   SetMem ((VOID *)fname, 5, 0);
   while ( r_size > 0 )
   {
